@@ -1,108 +1,81 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Step Around Bogor - AR Guide</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    
-    <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        /* Splash Screen - Sesuai konsep Slide 1 */
-        #splash {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #e0f2f1; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center;
-        }
-        #splash h1 { color: #004d40; margin-bottom: 5px; font-size: 24px; }
-        #splash p { color: #00695c; font-style: italic; margin-bottom: 20px; }
-        .loader { width: 200px; height: 12px; background: #b2dfdb; border-radius: 6px; overflow: hidden; }
-        .progress { width: 45%; height: 100%; background: #00796b; }
+    <meta charset="utf-8">
+    <title>Step Around Bogor - NFT AR</title>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
-        /* Tombol Next Step - Sesuai konsep Slide 3 */
-        .nav-btn {
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-            padding: 18px 45px; background: #007bff; color: white;
-            border: none; border-radius: 35px; font-size: 18px; font-weight: bold;
-            display: none; z-index: 1000; box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-            text-transform: uppercase; letter-spacing: 1px;
+    <style>
+        .arjs-loader {
+            height: 100%; width: 100%; position: absolute; top: 0; left: 0;
+            background-color: rgba(0, 0, 0, 0.8); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .arjs-loader div { text-align: center; font-size: 1.25em; color: white; font-family: sans-serif; }
+        
+        /* Tombol Navigasi Google Maps */
+        .nav-button {
+            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+            padding: 15px 30px; background: #007bff; color: white;
+            border: none; border-radius: 30px; font-weight: bold; z-index: 1000;
+            display: none; text-decoration: none;
         }
     </style>
 </head>
 
-<body>
-    <div id="splash">
-        <h1>STEP AROUND BOGOR</h1>
-        <p>"Your Virtual Tour Guide Solution Using AR"</p>
-        <div class="loader"><div class="progress"></div></div>
-        <p style="margin-top: 10px;">Loading..</p>
+<body style="margin: 0px; overflow: hidden;">
+    <div class="arjs-loader">
+        <div>Loading Step Around Bogor, please wait...</div>
     </div>
 
-    <button id="btnNav" class="nav-btn">Next Step</button>
+    <button id="btnNav" class="nav-button">NEXT STEP (MAPS)</button>
 
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;">
-        
-        <a-marker type="pattern" url="mexico.patt" id="marker-mexico">
-            <a-plane position="0 0.6 0" rotation="-90 0 0" width="2.8" height="0.8" color="#007bff"></a-plane>
-            <a-text value="Toward Mexico Garden\nDistance: 30m" align="center" position="0 0.62 0" rotation="-90 0 0" width="5" color="white"></a-text>
-            <a-triangle color="#ffffff" vertex-a="0 0.2 0" vertex-b="-0.3 -0.3 0" vertex-c="0.3 -0.3 0" position="0 0.6 -0.8" rotation="-90 0 0" scale="0.5 0.5 0.5"></a-triangle>
-        </a-marker>
+    <a-scene
+        vr-mode-ui="enabled: false;"
+        renderer="logarithmicDepthBuffer: true;"
+        embedded
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    >
+        <a-nft
+            id="nft-mexico"
+            type="nft"
+            url="https://cinasriwana.github.io/descriptors/taman-mexico"
+            smooth="true" smoothCount="10" smoothTolerance=".01" smoothThreshold="5"
+        >
+            <a-image 
+                src="foto-mexico.jpg" 
+                scale="150 150 150" 
+                position="100 0 -150" 
+                rotation="-90 0 0">
+            </a-image>
 
-        <a-marker type="pattern" url="anggrek.patt" id="marker-anggrek">
-            <a-plane position="0 0.6 0" rotation="-90 0 0" width="2.8" height="1.2" color="#28a745"></a-plane>
-            <a-text value="Griya Anggrek\nEducational Orchid Tour" align="center" position="0 0.62 0" rotation="-90 0 0" width="5" color="white"></a-text>
-        </a-marker>
-
-        <a-marker type="pattern" url="istana.patt" id="marker-istana">
-            <a-plane position="0 0.6 0" rotation="-90 0 0" width="2.8" height="0.8" color="#dc3545"></a-plane>
-            <a-text value="Arrived at:\nBogor Palace" align="center" position="0 0.62 0" rotation="-90 0 0" width="5" color="white"></a-text>
-        </a-marker>
-
-        <a-marker type="pattern" url="nepenthes.patt" id="marker-nepenthes">
-            <a-plane position="0 0.6 0" rotation="-90 0 0" width="2.8" height="0.8" color="#17a2b8"></a-plane>
-            <a-text value="Toward Taman Nepenthes\nDistance: 150m" align="center" position="0 0.62 0" rotation="-90 0 0" width="5" color="white"></a-text>
-        </a-marker>
+            <a-entity
+                position="100 0 50"
+                rotation="-90 0 0"
+                text="value: TAMAN MEXICO\nKoleksi kaktus dan sukulen dari daerah gersang Amerika Tengah dan Selatan.; color: white; align: center; width: 400; font: https://cdn.aframe.io/fonts/DejaVu-sans.json;">
+                <a-plane position="0 0 -5" width="450" height="150" color="#004d40" opacity="0.8"></a-plane>
+            </a-entity>
+        </a-nft>
 
         <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-        const splash = document.getElementById('splash');
-        const btnNav = document.getElementById('btnNav');
-        const markers = document.querySelectorAll('a-marker');
+        const btn = document.getElementById('btnNav');
+        const nftMarker = document.querySelector('a-nft');
 
-        // Menghilangkan Splash Screen - Simulasi Loading
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                splash.style.transition = "opacity 0.5s";
-                splash.style.opacity = "0";
-                setTimeout(() => { splash.style.display = 'none'; }, 500);
-            }, 2500);
+        // Munculkan tombol navigasi saat gambar terdeteksi
+        nftMarker.addEventListener('markerFound', () => {
+            btn.style.display = 'block';
+            btn.onclick = () => {
+                window.open('https://www.google.com/maps/search/?api=1&query=Taman+Meksiko+Bogor', '_blank');
+            };
         });
 
-        // Mapping Koordinat Google Maps (Ganti koordinat sesuai lokasi asli)
-        const coords = {
-            'marker-mexico': 'https://maps.app.goo.gl/Yp4Q9U8Yf7T2',
-            'marker-anggrek': 'https://maps.app.goo.gl/rD7Z2Z9X8W1',
-            'marker-istana': 'https://maps.app.goo.gl/P3X1Z7B6Y2A',
-            'marker-nepenthes': 'https://maps.app.goo.gl/K9W2X1Z7Q8'
-        };
-
-        // Event saat Marker ditemukan
-        markers.forEach(marker => {
-            marker.addEventListener('markerFound', () => {
-                btnNav.style.display = 'block';
-                btnNav.onclick = () => {
-                    window.open(coords[marker.id], '_blank');
-                };
-            });
-
-            marker.addEventListener('markerLost', () => {
-                btnNav.style.display = 'none';
-            });
+        // Sembunyikan tombol saat kamera beralih dari gambar
+        nftMarker.addEventListener('markerLost', () => {
+            btn.style.display = 'none';
         });
     </script>
 </body>
