@@ -1,76 +1,100 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Step Around Bogor - AR</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Step Around Bogor - AR Guide</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    
     <style>
-      /* Gaya untuk tombol Next Step */
-      .ar-button {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 15px 30px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 25px;
-        font-family: Arial, sans-serif;
-        font-size: 18px;
-        display: none; /* Muncul hanya saat marker terdeteksi */
-        z-index: 999;
-      }
-    </style>
-  </head>
+        body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
+        
+        /* Splash Screen */
+        #splash {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #e0f2f1; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .loading-bar { width: 200px; height: 10px; background: #ccc; border-radius: 5px; margin-top: 20px; }
+        .loading-fill { width: 40%; height: 100%; background: #00796b; border-radius: 5px; }
 
-  <body style="margin: 0px; overflow: hidden;">
-    <div id="splash" style="position:fixed; width:100%; height:100%; background:white; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-       <h2>Step Around Bogor</h2>
-       <p>Loading Your Virtual Tour Guide...</p>
+        /* Button Next Step */
+        .ar-button {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            padding: 15px 40px; background: #007bff; color: white;
+            border: none; border-radius: 30px; font-size: 18px; font-weight: bold;
+            display: none; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="splash">
+        <h1 style="color: #004d40;">STEP AROUND BOGOR</h1>
+        <p>"Your Virtual Tour Guide Solution Using AR"</p>
+        <div class="loading-bar"><div class="loading-fill"></div></div>
+        <p>Loading..</p>
     </div>
 
-    <button id="nextStepBtn" class="ar-button" onclick="window.open('https://maps.google.com/?q=Taman+Meksiko+Bogor', '_blank')">
-      Next Step
-    </button>
+    <button id="btnNext" class="ar-button">Next Step</button>
 
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-      
-      <a-marker type="pattern" url="https://cdn.glitch.global/your-id/pattern-Taman Mexico.patt" id="mexicoMarker">
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix;">
         
-        <a-plane position="0 0.5 0" rotation="-90 0 0" width="2.5" height="0.8" color="#007bff"></a-plane>
-        
-        <a-entity 
-          text="value: Toward Mexico Garden; align: center; width: 5; color: white; font: https://cdn.aframe.io/fonts/DejaVu-sans.json" 
-          position="0 0.51 0" rotation="-90 0 0">
-        </a-entity>
+        <a-marker type="pattern" url="mexico.patt" id="marker-mexico">
+            <a-plane position="0 0.5 0" rotation="-90 0 0" width="3" height="1" color="#007bff"></a-plane>
+            <a-text value="Toward Mexico Garden\nDistance: 30m" align="center" position="0 0.52 0" rotation="-90 0 0" width="5"></a-text>
+        </a-marker>
 
-        <a-entity 
-          text="value: 30m; align: center; width: 8; color: #FFD700; font: https://cdn.aframe.io/fonts/DejaVu-sans.json" 
-          position="0 0.51 0.4" rotation="-90 0 0">
-        </a-entity>
-      </a-marker>
+        <a-marker type="pattern" url="anggrek.patt" id="marker-anggrek">
+            <a-plane position="0 0.5 0" rotation="-90 0 0" width="3" height="1" color="#28a745"></a-plane>
+            <a-text value="Griya Anggrek\nEducational Tour" align="center" position="0 0.52 0" rotation="-90 0 0" width="5"></a-text>
+        </a-marker>
 
-      <a-entity camera></a-entity>
+        <a-marker type="pattern" url="istana.patt" id="marker-istana">
+            <a-plane position="0 0.5 0" rotation="-90 0 0" width="3" height="1" color="#dc3545"></a-plane>
+            <a-text value="Bogor Palace\nArrived: 0.0 km" align="center" position="0 0.52 0" rotation="-90 0 0" width="5"></a-text>
+        </a-marker>
+
+        <a-marker type="pattern" url="akuatik.patt" id="marker-akuatik">
+            <a-plane position="0 0.5 0" rotation="-90 0 0" width="3" height="1" color="#17a2b8"></a-plane>
+            <a-text value="Toward Aquatic Garden\nKeep Walking" align="center" position="0 0.52 0" rotation="-90 0 0" width="5"></a-text>
+        </a-marker>
+
+        <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-      // Sembunyikan Splash Screen setelah loading
-      window.addEventListener('load', () => {
-        document.getElementById('splash').style.display = 'none';
-      });
+        const splash = document.getElementById('splash');
+        const btn = document.getElementById('btnNext');
+        const markers = document.querySelectorAll('a-marker');
 
-      // Logika untuk menampilkan tombol saat marker terdeteksi
-      const marker = document.querySelector('#mexicoMarker');
-      const btn = document.querySelector('#nextStepBtn');
+        // Sembunyikan Splash Screen setelah aplikasi siap
+        window.addEventListener('load', () => {
+            setTimeout(() => { splash.style.display = 'none'; }, 2000);
+        });
 
-      marker.addEventListener('markerFound', () => {
-        btn.style.display = 'block';
-      });
+        // Logika munculnya tombol dan navigasi Maps [cite: 52]
+        markers.forEach(marker => {
+            marker.addEventListener('markerFound', () => {
+                btn.style.display = 'block';
+                
+                // Atur tujuan Google Maps berdasarkan ID marker
+                if(marker.id === 'marker-mexico') {
+                    btn.onclick = () => window.open('https://maps.google.com/?q=Taman+Meksiko+Bogor', '_blank');
+                } else if(marker.id === 'marker-anggrek') {
+                    btn.onclick = () => window.open('https://maps.google.com/?q=Griya+Anggrek+Kebun+Raya', '_blank');
+                } else if(marker.id === 'marker-istana') {
+                    btn.onclick = () => window.open('https://maps.google.com/?q=Istana+Bogor', '_blank');
+                } else if(marker.id === 'marker-akuatik') {
+                    btn.onclick = () => window.open('https://maps.google.com/?q=Taman+Akuatik+Bogor', '_blank');
+                }
+            });
 
-      marker.addEventListener('markerLost', () => {
-        btn.style.display = 'none';
-      });
+            marker.addEventListener('markerLost', () => {
+                btn.style.display = 'none';
+            });
+        });
     </script>
-  </body>
+</body>
 </html>
