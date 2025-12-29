@@ -2,35 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Step Around Bogor - NFT AR</title>
+    <title>Test Step Around Bogor</title>
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
-
-    <style>
-        .arjs-loader {
-            height: 100%; width: 100%; position: absolute; top: 0; left: 0;
-            background-color: rgba(0, 0, 0, 0.8); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .arjs-loader div { text-align: center; font-size: 1.25em; color: white; font-family: sans-serif; }
-        
-        /* Tombol Navigasi Google Maps */
-        .nav-button {
-            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
-            padding: 15px 30px; background: #007bff; color: white;
-            border: none; border-radius: 30px; font-weight: bold; z-index: 1000;
-            display: none; text-decoration: none;
-        }
-    </style>
 </head>
 
 <body style="margin: 0px; overflow: hidden;">
-    <div class="arjs-loader">
-        <div>Loading Step Around Bogor, please wait...</div>
-    </div>
-
-    <button id="btnNav" class="nav-button">NEXT STEP (MAPS)</button>
-
     <a-scene
         vr-mode-ui="enabled: false;"
         renderer="logarithmicDepthBuffer: true;"
@@ -38,45 +15,19 @@
         arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
     >
         <a-nft
-            id="nft-mexico"
             type="nft"
-            url="https://cinasriwana.github.io/descriptors/tamanmexico"
-            smooth="true" smoothCount="10" smoothTolerance=".01" smoothThreshold="5"
+            url="descriptors/taman-mexico"
+            smooth="true"
+            smoothCount="10"
         >
-            <a-image 
-                src="fotomexico.jpeg" 
-                scale="500 500 500" 
-                position="100 0 -150" 
-                rotation="-90 0 0">
-            </a-image>
-
-            <a-entity
-                position="100 0 50"
-                rotation="-90 0 0"
-                text="value: TAMAN MEXICO\nKoleksi kaktus dan sukulen dari daerah gersang Amerika Tengah dan Selatan.; color: white; align: center; width: 400; font: https://cdn.aframe.io/fonts/DejaVu-sans.json;">
-                <a-plane position="0 0 -5" width="450" height="150" color="#004d40" opacity="0.8"></a-plane>
-            </a-entity>
+            <a-box 
+                position="100 0.5 -100" 
+                scale="100 100 100" 
+                material="color: green; opacity: 0.8;">
+            </a-box>
         </a-nft>
 
         <a-entity camera></a-entity>
     </a-scene>
-
-    <script>
-        const btn = document.getElementById('btnNav');
-        const nftMarker = document.querySelector('a-nft');
-
-        // Munculkan tombol navigasi saat gambar terdeteksi
-        nftMarker.addEventListener('markerFound', () => {
-            btn.style.display = 'block';
-            btn.onclick = () => {
-                window.open('https://www.google.com/maps/search/?api=1&query=Taman+Meksiko+Bogor', '_blank');
-            };
-        });
-
-        // Sembunyikan tombol saat kamera beralih dari gambar
-        nftMarker.addEventListener('markerLost', () => {
-            btn.style.display = 'none';
-        });
-    </script>
 </body>
 </html>
